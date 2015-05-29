@@ -15,22 +15,19 @@ class AuthServiceProvider implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
-        $uitidConfig = $app['config']['uitid'];
-        $consumerConfig = $uitidConfig['consumer'];
-
         $app['uitid_consumer_credentials'] = $app->share(
-            function ($app) use ($consumerConfig) {
+            function ($app) {
                 return new \CultuurNet\Auth\ConsumerCredentials(
-                    $consumerConfig['key'],
-                    $consumerConfig['secret']
+                    $app['uitid.consumer.key'],
+                    $app['uitid.consumer.secret']
                 );
             }
         );
 
         $app['auth_service'] = $app->share(
-            function ($app) use ($uitidConfig) {
+            function ($app) {
                 return new \CultuurNet\Auth\Guzzle\Service(
-                    $uitidConfig['base_url'],
+                    $app['uitid.base_url'],
                     $app['uitid_consumer_credentials']
                 );
             }
