@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "076569d331203f4b7ace81f530b6c93a",
+    "hash": "a82a0611fdf06f39e07ee0ad450e419c",
     "packages": [
         {
             "name": "cultuurnet/auth",
@@ -52,6 +52,106 @@
             ],
             "description": "Authentication service for CultuurNet web services",
             "time": "2014-10-28 13:01:49"
+        },
+        {
+            "name": "cultuurnet/cdb",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cultuurnet/Cdb.git",
+                "reference": "1273c561d60a5d548260f3184312f0c7bbe81ea4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cultuurnet/Cdb/zipball/1273c561d60a5d548260f3184312f0c7bbe81ea4",
+                "reference": "1273c561d60a5d548260f3184312f0c7bbe81ea4",
+                "shasum": ""
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.3",
+                "satooshi/php-coveralls": "~0.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "CultureFeed_Cdb_": [
+                        "lib"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "description": "PHP library for hydrating/manipulating CultuurNet's Cdb XML documents",
+            "time": "2015-05-22 08:48:28"
+        },
+        {
+            "name": "cultuurnet/culturefeed-php",
+            "version": "v1.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cultuurnet/culturefeed-php.git",
+                "reference": "1663b23dbf5b4adcac0aeab4b4526f8351a493af"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cultuurnet/culturefeed-php/zipball/1663b23dbf5b4adcac0aeab4b4526f8351a493af",
+                "reference": "1663b23dbf5b4adcac0aeab4b4526f8351a493af",
+                "shasum": ""
+            },
+            "require": {
+                "cultuurnet/cdb": "~2.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.4.0",
+                "satooshi/php-coveralls": "~0.7"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "CultureFeed",
+                    "OAuth"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sven Houtmeyers",
+                    "email": "sven.houtmeyers@cultuurnet.be"
+                },
+                {
+                    "name": "Luk Dens",
+                    "email": "luk.dens@cultuurnet.be"
+                },
+                {
+                    "name": "Davy Van Den Bremt"
+                },
+                {
+                    "name": "Jochen Stals"
+                },
+                {
+                    "name": "Nils Destoop"
+                },
+                {
+                    "name": "Kristof Coomans",
+                    "email": "kristof@2dotstwice.be"
+                },
+                {
+                    "name": "Hans Langouche",
+                    "email": "hans@2dotstwice.be"
+                }
+            ],
+            "description": "Culturefeed PHP library",
+            "time": "2015-05-26 14:42:23"
         },
         {
             "name": "guzzle/common",
