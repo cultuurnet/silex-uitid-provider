@@ -109,7 +109,7 @@ class AuthControllerProvider implements ControllerProviderInterface
         $controllerProvider = $this;
 
         $controllers->get(
-            'culturefeed/oauth/connect',
+            'connect',
             function (Request $request, Application $app) use ($controllerProvider) {
                 $urlGenerator = $controllerProvider->urlGenerator;
                 $authService = $controllerProvider->authService;
@@ -134,7 +134,7 @@ class AuthControllerProvider implements ControllerProviderInterface
         );
 
         $controllers->get(
-            'culturefeed/oauth/authorize',
+            'authorize',
             function (Request $request, Application $app) use ($controllerProvider) {
                 $urlGenerator = $controllerProvider->urlGenerator;
                 $authService = $controllerProvider->authService;
