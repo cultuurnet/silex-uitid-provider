@@ -1,0 +1,8 @@
+{
+  "name": "cultuurnet/silex-uitid-provider",
+  "description": "Silex UiTID authentication provider.",
+  "license": "GPLv3",
+  "require": {
+    "cultuurnet/auth": "1.0.*@dev"
+  }
+}
