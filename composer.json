@@ -3,7 +3,7 @@
   "description": "Silex UiTID authentication provider.",
   "license": "GPLv3",
   "require": {
-    "cultuurnet/auth": "~1.1",
+    "cultuurnet/auth": "~1.2",
     "cultuurnet/culturefeed-php": "~1.5"
   },
   "autoload": {
