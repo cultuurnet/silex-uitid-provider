@@ -1,37 +1,27 @@
 <?php
 
-namespace CultuurNet\UiTIDProvider;
+namespace CultuurNet\UiTIDProvider\Auth;
 
 use CultuurNet\Auth\ServiceInterface;
 use CultuurNet\Auth\TokenCredentials;
 use CultuurNet\Auth\User;
+use CultuurNet\UiTIDProvider\Session\UserSession;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class AuthControllerProvider implements ControllerProviderInterface
 {
-    /**
-     * Name of the session variable that stores the request token.
-     */
-    const SESSION_REQUEST_TOKEN_VARIABLE = 'culturefeed_tmp_token';
-
-    /**
-     * Name of the session variable that stores the user.
-     */
-    const SESSION_USER_VARIABLE = 'culturefeed_user';
-
     /**
      * @var ServiceInterface
      */
     protected $authService;
 
     /**
-     * @var Session
+     * @var UserSession
      */
     protected $session;
 
@@ -47,12 +37,12 @@ class AuthControllerProvider implements ControllerProviderInterface
 
     /**
      * @param ServiceInterface $authService
-     * @param Session $session
+     * @param UserSession $session
      * @param UrlGeneratorInterface $urlGenerator
      */
     public function __construct(
         ServiceInterface $authService,
-        Session $session,
+        UserSession $session,
         UrlGeneratorInterface $urlGenerator,
         $defaultDestination = null
     ) {
@@ -65,35 +55,6 @@ class AuthControllerProvider implements ControllerProviderInterface
         } else {
             $this->defaultDestination = $defaultDestination;
         }
-    }
-
-    /**
-     * @param TokenCredentials $token
-     */
-    protected function setSessionRequestToken(TokenCredentials $token)
-    {
-        $this->session->set(self::SESSION_REQUEST_TOKEN_VARIABLE, $token);
-    }
-
-    /**
-     * @return TokenCredentials
-     */
-    protected function getSessionRequestToken()
-    {
-        return $this->session->get(self::SESSION_REQUEST_TOKEN_VARIABLE);
-    }
-
-    protected function removeSessionRequestToken()
-    {
-        $this->session->remove(self::SESSION_REQUEST_TOKEN_VARIABLE);
-    }
-
-    /**
-     * @param User $user
-     */
-    protected function setSessionUser(User $user)
-    {
-        $this->session->set(self::SESSION_USER_VARIABLE, $user);
     }
 
     /**
@@ -111,6 +72,7 @@ class AuthControllerProvider implements ControllerProviderInterface
         $controllers->get(
             '/connect',
             function (Request $request, Application $app) use ($controllerProvider) {
+                $session = $controllerProvider->session;
                 $urlGenerator = $controllerProvider->urlGenerator;
                 $authService = $controllerProvider->authService;
 
@@ -126,7 +88,7 @@ class AuthControllerProvider implements ControllerProviderInterface
                 );
 
                 $token = $authService->getRequestToken($callback_url);
-                $controllerProvider->setSessionRequestToken($token);
+                $session->setRequestToken($token);
 
                 $authorizeUrl = $authService->getAuthorizeUrl($token);
                 return new RedirectResponse($authorizeUrl);
@@ -136,17 +98,18 @@ class AuthControllerProvider implements ControllerProviderInterface
         $controllers->get(
             '/authorize',
             function (Request $request, Application $app) use ($controllerProvider) {
+                $session = $controllerProvider->session;
                 $urlGenerator = $controllerProvider->urlGenerator;
                 $authService = $controllerProvider->authService;
 
                 $query = $request->query;
-                $token = $this->getSessionRequestToken();
+                $token = $session->getRequestToken();
 
                 if ($query->get('oauth_token') == $token->getToken() && $query->get('oauth_verifier')) {
                     $user = $authService->getAccessToken($token, $query->get('oauth_verifier'));
 
-                    $controllerProvider->removeSessionRequestToken();
-                    $controllerProvider->setSessionUser($user);
+                    $session->removeRequestToken();
+                    $session->setUser($user);
                 }
 
                 if ($query->get('destination')) {
