@@ -27,7 +27,7 @@ class UserSession extends Session
     }
 
     /**
-     * @return TokenCredentials
+     * @return TokenCredentials|null
      */
     public function getRequestToken()
     {
@@ -48,7 +48,7 @@ class UserSession extends Session
     }
 
     /**
-     * @return User
+     * @return User|null
      */
     public function getUser()
     {
