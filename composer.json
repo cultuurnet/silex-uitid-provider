@@ -4,7 +4,8 @@
   "license": "GPLv3",
   "require": {
     "cultuurnet/auth": "~1.2",
-    "cultuurnet/culturefeed-php": "~1.5"
+    "cultuurnet/culturefeed-php": "~1.5",
+    "cultuurnet/udb3-symfony": "~0.0@dev"
   },
   "autoload": {
     "psr-4": {
