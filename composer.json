@@ -7,6 +7,12 @@
     "cultuurnet/culturefeed-php": "~1.5",
     "cultuurnet/udb3-symfony": "~0.0@dev"
   },
+  "require-dev": {
+    "phpspec/phpspec": "~2.0",
+    "phpunit/phpunit": "~4.3",
+    "squizlabs/php_codesniffer": "~2.2",
+    "phing/phing": "~2.10"
+  },
   "autoload": {
     "psr-4": {
       "CultuurNet\\UiTIDProvider\\": ["src"]
