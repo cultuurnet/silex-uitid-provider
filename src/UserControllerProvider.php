@@ -38,7 +38,7 @@ class UserControllerProvider extends ControllerExtensionProvider
         /**
          * Logout method.
          */
-        $controllers->get('/logout', function(Request $request, Application $app) {
+        $controllers->get('/logout', function (Request $request, Application $app) {
             /** @var \Symfony\Component\HttpFoundation\Session\Session $session */
             $session = $app['session'];
             $session->invalidate();
@@ -48,5 +48,4 @@ class UserControllerProvider extends ControllerExtensionProvider
 
         return $controllers;
     }
-
 }

@@ -1,7 +1,7 @@
 {
   "name": "cultuurnet/silex-uitid-provider",
   "description": "Silex UiTID authentication provider.",
-  "license": "GPLv3",
+  "license": "GPL-3.0",
   "require": {
     "cultuurnet/auth": "~1.2",
     "cultuurnet/culturefeed-php": "~1.5",
