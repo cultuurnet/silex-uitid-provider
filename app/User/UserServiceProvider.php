@@ -12,11 +12,11 @@ class UserServiceProvider implements ServiceProviderInterface
      */
     public function register(Application $app)
     {
-        $app['uitid_user_service'] = $app->share(function(Application $app) {
+        $app['uitid_user_service'] = $app->share(function (Application $app) {
             return new UserService($app['culturefeed']);
         });
 
-        $app['uitid_user_session_service'] = $app->share(function(Application $app) {
+        $app['uitid_user_session_service'] = $app->share(function (Application $app) {
             return new UserSessionService($app['session']);
         });
 
@@ -45,5 +45,4 @@ class UserServiceProvider implements ServiceProviderInterface
     public function boot(Application $app)
     {
     }
-
 }
