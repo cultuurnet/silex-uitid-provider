@@ -28,7 +28,7 @@ class User extends \CultureFeed_User implements \JsonSerializable
      */
     public static function fromCultureFeedUser(\CultureFeed_User $user)
     {
-        $user = new self();
+        $new = new self();
 
         $source = new \ReflectionObject($user);
         $properties = $source->getProperties();
@@ -36,9 +36,9 @@ class User extends \CultureFeed_User implements \JsonSerializable
             $property = $propertyObject->getName();
             $value = $propertyObject->getValue($user);
 
-            $user->{$property} = $value;
+            $new->{$property} = $value;
         }
 
-        return $user;
+        return $new;
     }
 }

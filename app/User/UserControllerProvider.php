@@ -4,8 +4,9 @@ namespace CultuurNet\UiTIDProvider\User;
 
 use Silex\Application;
 use Silex\ControllerCollection;
+use Silex\ControllerProviderInterface;
 
-class UserControllerProvider
+class UserControllerProvider implements ControllerProviderInterface
 {
     /**
      * Returns routes to connect to the given application.
@@ -28,5 +29,7 @@ class UserControllerProvider
 
         $controllers->get('/user', 'uitid_user_controller:getUser');
         $controllers->get('/logout', 'uitid_user_controller:logout');
+
+        return $controllers;
     }
 }

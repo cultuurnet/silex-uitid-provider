@@ -64,6 +64,8 @@ class CultureFeedServiceProvider implements ServiceProviderInterface
                 $userCredentialsSecret
             );
             $oauthClient->setEndpoint($app['culturefeed.endpoint']);
+
+            return $oauthClient;
         });
     }
 
