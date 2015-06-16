@@ -2,10 +2,7 @@
 
 namespace CultuurNet\UiTIDProvider\Auth;
 
-use CultuurNet\Auth\ServiceInterface;
-use CultuurNet\Auth\TokenCredentials;
-use CultuurNet\Auth\User;
-use CultuurNet\UiTIDProvider\Session\UserSession;
+use CultuurNet\UiTIDProvider\User\UserSessionServiceInterface;
 use Silex\Application;
 use Silex\ControllerCollection;
 use Silex\ControllerProviderInterface;
@@ -16,14 +13,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class AuthControllerProvider implements ControllerProviderInterface
 {
     /**
-     * @var ServiceInterface
+     * @var AuthServiceInterface
      */
     protected $authService;
 
     /**
-     * @var UserSession
+     * @var UserSessionServiceInterface
      */
-    protected $session;
+    protected $userSessionService;
 
     /**
      * @var UrlGeneratorInterface
@@ -36,18 +33,19 @@ class AuthControllerProvider implements ControllerProviderInterface
     protected $defaultDestination;
 
     /**
-     * @param ServiceInterface $authService
-     * @param UserSession $session
+     * @param AuthServiceInterface $authService
+     * @param UserSessionServiceInterface $userSessionService
      * @param UrlGeneratorInterface $urlGenerator
+     * @param string|null $defaultDestination
      */
     public function __construct(
-        ServiceInterface $authService,
-        UserSession $session,
+        AuthServiceInterface $authService,
+        UserSessionServiceInterface $userSessionService,
         UrlGeneratorInterface $urlGenerator,
         $defaultDestination = null
     ) {
         $this->authService = $authService;
-        $this->session = $session;
+        $this->userSessionService = $userSessionService;
         $this->urlGenerator = $urlGenerator;
 
         if (is_null($defaultDestination)) {
@@ -67,55 +65,46 @@ class AuthControllerProvider implements ControllerProviderInterface
     public function connect(Application $app)
     {
         $controllers = $app['controllers_factory'];
-        $controllerProvider = $this;
 
         $controllers->get(
             '/connect',
-            function (Request $request, Application $app) use ($controllerProvider) {
-                $session = $controllerProvider->session;
-                $urlGenerator = $controllerProvider->urlGenerator;
-                $authService = $controllerProvider->authService;
-
+            function (Request $request, Application $app) {
                 $callback_url_params = array();
                 if ($request->query->get('destination')) {
                     $callback_url_params['destination'] = $request->query->get('destination');
                 }
 
-                $callback_url = $urlGenerator->generate(
+                $callback_url = $this->urlGenerator->generate(
                     'culturefeed.oauth.authorize',
                     $callback_url_params,
-                    $urlGenerator::ABSOLUTE_URL
+                    UrlGeneratorInterface::ABSOLUTE_URL
                 );
 
-                $token = $authService->getRequestToken($callback_url);
-                $session->setRequestToken($token);
+                $token = $this->authService->getRequestToken($callback_url);
+                $this->authService->storeRequestToken($token);
 
-                $authorizeUrl = $authService->getAuthorizeUrl($token);
+                $authorizeUrl = $this->authService->getAuthorizeUrl($token);
                 return new RedirectResponse($authorizeUrl);
             }
         );
 
         $controllers->get(
             '/authorize',
-            function (Request $request, Application $app) use ($controllerProvider) {
-                $session = $controllerProvider->session;
-                $urlGenerator = $controllerProvider->urlGenerator;
-                $authService = $controllerProvider->authService;
-
+            function (Request $request, Application $app) {
                 $query = $request->query;
-                $token = $session->getRequestToken();
+                $token = $this->authService->getStoredRequestToken();
 
                 if ($query->get('oauth_token') == $token->getToken() && $query->get('oauth_verifier')) {
-                    $user = $authService->getAccessToken($token, $query->get('oauth_verifier'));
+                    $user = $this->authService->getAccessToken($token, $query->get('oauth_verifier'));
 
-                    $session->removeRequestToken();
-                    $session->setUser($user);
+                    $this->authService->removeStoredRequestToken();
+                    $this->userSessionService->setActiveUser($user);
                 }
 
                 if ($query->get('destination')) {
                     return new RedirectResponse($query->get('destination'));
                 } else {
-                    return new RedirectResponse($urlGenerator->generate($this->defaultDestination));
+                    return new RedirectResponse($this->urlGenerator->generate($this->defaultDestination));
                 }
             }
         )->bind('culturefeed.oauth.authorize');

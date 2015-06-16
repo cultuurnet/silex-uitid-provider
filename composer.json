@@ -17,7 +17,12 @@
   },
   "autoload": {
     "psr-4": {
-      "CultuurNet\\UiTIDProvider\\": ["src"]
+      "CultuurNet\\UiTIDProvider\\": ["src", "app"]
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CultuurNet\\UiTIDProvider\\": ["test"]
     }
   },
   "minimum-stability": "dev",
