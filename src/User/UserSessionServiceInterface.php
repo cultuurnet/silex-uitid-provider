@@ -2,17 +2,17 @@
 
 namespace CultuurNet\UiTIDProvider\User;
 
-use CultuurNet\Auth\User;
+use CultuurNet\Auth\User as MinimalUserInfo;
 
 interface UserSessionServiceInterface
 {
     /**
-     * @param User $user
+     * @param MinimalUserInfo $user
      */
-    public function setActiveUser(User $user);
+    public function setActiveUser(MinimalUserInfo $user);
 
     /**
-     * @return User|null
+     * @return MinimalUserInfo|null
      */
     public function getActiveUser();
 
