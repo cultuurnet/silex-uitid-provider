@@ -2,7 +2,7 @@
 
 namespace CultuurNet\UiTIDProvider\User;
 
-use CultuurNet\Auth\User;
+use CultuurNet\Auth\User as MinimalUserInfo;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class UserSessionService implements UserSessionServiceInterface
@@ -26,15 +26,15 @@ class UserSessionService implements UserSessionServiceInterface
     }
 
     /**
-     * @param User $user
+     * @param MinimalUserInfo $user
      */
-    public function setActiveUser(User $user)
+    public function setActiveUser(MinimalUserInfo $user)
     {
         $this->session->set(self::USER_VARIABLE, $user);
     }
 
     /**
-     * @return User|null
+     * @return MinimalUserInfo|null
      */
     public function getActiveUser()
     {
