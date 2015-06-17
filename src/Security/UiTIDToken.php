@@ -7,11 +7,6 @@ use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class UiTIDToken extends AbstractToken
 {
-    /**
-     * @var TokenCredentials
-     */
-    protected $credentials;
-
     public function __construct(array $roles = array())
     {
         parent::__construct($roles);
@@ -19,18 +14,10 @@ class UiTIDToken extends AbstractToken
     }
 
     /**
-     * @param TokenCredentials $credentials
-     */
-    public function setCredentials(TokenCredentials $credentials)
-    {
-        $this->credentials = $credentials;
-    }
-
-    /**
-     * @return TokenCredentials
+     * @inheritdoc
      */
     public function getCredentials()
     {
-        return $this->credentials;
+        return '';
     }
 }

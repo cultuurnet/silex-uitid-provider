@@ -56,7 +56,7 @@ class UiTIDUserProvider implements UserProviderInterface
             throw new UnsupportedUserException();
         }
 
-        $this->loadUserByUsername($user->getUsername());
+        return $this->loadUserByUsername($user->getUsername());
     }
 
     /**

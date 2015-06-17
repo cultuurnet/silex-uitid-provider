@@ -2,7 +2,6 @@
 
 namespace CultuurNet\UiTIDProvider\Security;
 
-use CultuurNet\UiTIDProvider\User\UserService;
 use CultuurNet\UiTIDProvider\User\UserServiceInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +43,6 @@ class UiTIDAuthenticator implements AuthenticationProviderInterface, Authenticat
 
         $token = new UiTIDToken($user->getRoles());
         $token->setUser($user);
-        $token->setCredentials($token->getCredentials());
 
         return $token;
     }

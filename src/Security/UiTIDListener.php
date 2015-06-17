@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 class UiTIDListener implements ListenerInterface
@@ -48,15 +48,16 @@ class UiTIDListener implements ListenerInterface
     {
         $user = $this->userSessionService->getActiveUser();
 
-        $token = new UiTIDToken();
-        $token->setUser($user->getId());
+        if (!is_null($user)) {
+            $token = new UiTIDToken();
+            $token->setUser((string) $user->getId());
 
-        try {
-            $authToken = $this->authenticationManager->authenticate($token);
-            $this->tokenStorage->setToken('uitid', $authToken);
-            return;
-        } catch (AuthenticationException $exception) {
-            $this->tokenStorage->setToken('uitid', null);
+            try {
+                $authToken = $this->authenticationManager->authenticate($token);
+                $this->tokenStorage->setToken($authToken);
+                return;
+            } catch (AuthenticationException $exception) {
+            }
         }
 
         $response = new Response('Access denied.', Response::HTTP_FORBIDDEN);
