@@ -15,11 +15,6 @@ class AuthService extends Service implements AuthServiceInterface
     const REQUEST_TOKEN_VARIABLE = 'culturefeed_request_token';
 
     /**
-     * Name of the session variable that stores the user.
-     */
-    const USER_VARIABLE = 'culturefeed_user';
-
-    /**
      * @var SessionInterface
      */
     protected $session;
