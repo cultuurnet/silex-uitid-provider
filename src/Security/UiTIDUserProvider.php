@@ -3,7 +3,7 @@
 namespace CultuurNet\UiTIDProvider\Security;
 
 use CultuurNet\UiTIDProvider\User\User;
-use CultuurNet\UiTIDProvider\User\UserService;
+use CultuurNet\UiTIDProvider\User\UserServiceInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -12,25 +12,16 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 class UiTIDUserProvider implements UserProviderInterface
 {
     /**
-     * @var UserService
+     * @var UserServiceInterface
      */
     protected $userService;
 
     /**
-     * @param UserService $userService
+     * @param UserServiceInterface $userService
      */
-    public function __construct(UserService $userService)
+    public function __construct(UserServiceInterface $userService)
     {
         $this->userService = $userService;
-    }
-
-    /**
-     * @param $id
-     * @return User|null
-     */
-    public function loadUserById($id)
-    {
-        return $this->userService->getUser($id);
     }
 
     /**

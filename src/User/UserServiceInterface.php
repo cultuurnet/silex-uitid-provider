@@ -9,4 +9,10 @@ interface UserServiceInterface
      * @return User
      */
     public function getUser($id);
+
+    /**
+     * @param $username
+     * @return User|null
+     */
+    public function getUserByUsername($username);
 }
