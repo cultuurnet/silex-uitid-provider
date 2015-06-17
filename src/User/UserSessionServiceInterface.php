@@ -9,12 +9,12 @@ interface UserSessionServiceInterface
     /**
      * @param MinimalUserInfo $user
      */
-    public function setActiveUser(MinimalUserInfo $user);
+    public function setMinimalUserInfo(MinimalUserInfo $user);
 
     /**
      * @return MinimalUserInfo|null
      */
-    public function getActiveUser();
+    public function getMinimalUserInfo();
 
     public function logout();
 }

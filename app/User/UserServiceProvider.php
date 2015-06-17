@@ -23,7 +23,7 @@ class UserServiceProvider implements ServiceProviderInterface
         $app['uitid_user_session_data'] = $app->share(function (Application $app) {
             /* @var UserSessionService $userSessionService */
             $userSessionService = $app['uitid_user_session_service'];
-            return $userSessionService->getActiveUser();
+            return $userSessionService->getMinimalUserInfo();
         });
 
         $app['uitid_user'] = $app->share(function (Application $app) {

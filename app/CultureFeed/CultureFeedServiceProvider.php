@@ -19,7 +19,7 @@ class CultureFeedServiceProvider implements ServiceProviderInterface
             function (Application $app) {
                 /* @var UserSessionService $userSessionService */
                 $userSessionService = $app['uitid_user_session_service'];
-                $user = $userSessionService->getActiveUser();
+                $user = $userSessionService->getMinimalUserInfo();
                 if (!is_null($user)) {
                     return $user->getTokenCredentials();
                 } else {

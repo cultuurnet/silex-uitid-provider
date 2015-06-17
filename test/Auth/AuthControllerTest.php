@@ -176,7 +176,7 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
 
         // Make sure that the minimal user info has been stored in the session.
         $this->assertEquals(
-            $this->userSessionService->getActiveUser(),
+            $this->userSessionService->getMinimalUserInfo(),
             $user
         );
 

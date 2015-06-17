@@ -28,7 +28,7 @@ class UserSessionService implements UserSessionServiceInterface
     /**
      * @param MinimalUserInfo $user
      */
-    public function setActiveUser(MinimalUserInfo $user)
+    public function setMinimalUserInfo(MinimalUserInfo $user)
     {
         $this->session->set(self::USER_VARIABLE, $user);
     }
@@ -36,7 +36,7 @@ class UserSessionService implements UserSessionServiceInterface
     /**
      * @return MinimalUserInfo|null
      */
-    public function getActiveUser()
+    public function getMinimalUserInfo()
     {
         return $this->session->get(self::USER_VARIABLE);
     }

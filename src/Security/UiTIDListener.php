@@ -46,7 +46,7 @@ class UiTIDListener implements ListenerInterface
      */
     public function handle(GetResponseEvent $event)
     {
-        $user = $this->userSessionService->getActiveUser();
+        $user = $this->userSessionService->getMinimalUserInfo();
 
         if (!is_null($user)) {
             $token = new UiTIDToken();

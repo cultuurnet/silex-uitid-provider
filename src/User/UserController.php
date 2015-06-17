@@ -35,7 +35,7 @@ class UserController
     public function getUser()
     {
         $user = null;
-        $userSessionData = $this->userSessionService->getActiveUser();
+        $userSessionData = $this->userSessionService->getMinimalUserInfo();
 
         if (!is_null($userSessionData)) {
             $user = $this->userService->getUser($userSessionData->getId());

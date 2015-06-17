@@ -89,7 +89,7 @@ class AuthController
             $user = $this->authService->getAccessToken($token, $query->get('oauth_verifier'));
 
             $this->authService->removeStoredRequestToken();
-            $this->userSessionService->setActiveUser($user);
+            $this->userSessionService->setMinimalUserInfo($user);
         }
 
         if ($query->get('destination')) {
