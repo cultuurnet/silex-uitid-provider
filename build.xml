@@ -18,4 +18,11 @@
             <fileset refid="php"/>
         </phpcodesniffer>
     </target>
+
+    <target name="report-to-coveralls">
+        <exec
+            command="./vendor/bin/coveralls -v"
+            passthru="true"
+            checkreturn="true" />
+    </target>
 </project>

@@ -7,6 +7,7 @@ script:
 - ./vendor/bin/phpunit
 - ./vendor/bin/phpspec run
 - ./vendor/bin/phing test
+after_success: ./vendor/bin/phing report-to-coveralls
 notifications:
   email:
     recipients:
