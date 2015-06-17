@@ -80,7 +80,8 @@ class AuthController
      * @param Request $request
      * @return RedirectResponse
      */
-    public function authorize(Request $request) {
+    public function authorize(Request $request)
+    {
         $query = $request->query;
         $token = $this->authService->getStoredRequestToken();
 
