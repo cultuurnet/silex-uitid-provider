@@ -2,7 +2,10 @@
 
 namespace CultuurNet\UiTIDProvider\User;
 
-class User extends \CultureFeed_User implements \JsonSerializable
+use Symfony\Component\Security\Core\Role\Role;
+use Symfony\Component\Security\Core\User\UserInterface;
+
+class User extends \CultureFeed_User implements \JsonSerializable, UserInterface
 {
     /**
      * (PHP 5 >= 5.4.0)
@@ -40,5 +43,44 @@ class User extends \CultureFeed_User implements \JsonSerializable
         }
 
         return $new;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getRoles()
+    {
+        return array('UITID_USER');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPassword()
+    {
+        return '';
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getSalt()
+    {
+        return null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getUsername()
+    {
+        return $this->nick;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function eraseCredentials()
+    {
     }
 }

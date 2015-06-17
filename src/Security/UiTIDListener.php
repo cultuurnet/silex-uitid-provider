@@ -1,0 +1,65 @@
+<?php
+
+namespace CultuurNet\UiTIDProvider\Security;
+
+use CultuurNet\UiTIDProvider\User\UserSessionServiceInterface;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Csrf\TokenStorage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Firewall\ListenerInterface;
+
+class UiTIDListener implements ListenerInterface
+{
+    /**
+     * @var AuthenticationManagerInterface
+     */
+    protected $authenticationManager;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    /**
+     * @var UserSessionServiceInterface
+     */
+    protected $userSessionService;
+
+    /**
+     * @param AuthenticationManagerInterface $authenticationManager
+     * @param UserSessionServiceInterface $userSessionService
+     */
+    public function __construct(
+        AuthenticationManagerInterface $authenticationManager,
+        TokenStorageInterface $tokenStorage,
+        UserSessionServiceInterface $userSessionService
+    ) {
+        $this->authenticationManager = $authenticationManager;
+        $this->tokenStorage = $tokenStorage;
+        $this->userSessionService = $userSessionService;
+    }
+
+    /**
+     * @param GetResponseEvent $event
+     */
+    public function handle(GetResponseEvent $event)
+    {
+        $user = $this->userSessionService->getActiveUser();
+
+        $token = new UiTIDToken();
+        $token->setUser($user->getId());
+
+        try {
+            $authToken = $this->authenticationManager->authenticate($token);
+            $this->tokenStorage->setToken('uitid', $authToken);
+            return;
+        } catch (AuthenticationException $exception) {
+            $this->tokenStorage->setToken('uitid', null);
+        }
+
+        $response = new Response('Access denied.', Response::HTTP_FORBIDDEN);
+        $event->setResponse($response);
+    }
+}

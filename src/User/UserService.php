@@ -24,13 +24,42 @@ class UserService implements UserServiceInterface
 
     /**
      * @param string $id
-     * @return User
+     * @return User|null
      */
     public function getUser($id)
     {
-        $cfUser = $this->cultureFeed->getUser($id, self::INCLUDE_PRIVATE_FIELDS);
+        try {
+            $cfUser = $this->cultureFeed->getUser($id, self::INCLUDE_PRIVATE_FIELDS);
 
-        // Cast to a User object that can be safely json encoded.
-        return User::fromCultureFeedUser($cfUser);
+            // Cast to a User object that can be safely json encoded.
+            return User::fromCultureFeedUser($cfUser);
+        } catch (\CultureFeed_ParseException $e) {
+            return null;
+        }
+    }
+
+    /**
+     * @param $username
+     * @return User|null
+     */
+    public function getUserByUsername($username)
+    {
+        try {
+            $query = new \CultureFeed_SearchUsersQuery();
+            $query->nick = $username;
+
+            $results = $this->cultureFeed->searchUsers($query);
+            $users = $results->objects;
+
+            if (empty($users)) {
+                return null;
+            }
+
+            $user = reset($users);
+
+            return $this->getUser($user->id);
+        } catch (\CultureFeed_ParseException $e) {
+            return null;
+        }
     }
 }
