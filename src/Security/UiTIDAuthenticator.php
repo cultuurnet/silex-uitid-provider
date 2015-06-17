@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 
-class UiTIDAuthenticator implements AuthenticationProviderInterface, AuthenticationFailureHandlerInterface
+class UiTIDAuthenticator implements AuthenticationProviderInterface
 {
     /**
      * @var UserServiceInterface
@@ -53,13 +53,5 @@ class UiTIDAuthenticator implements AuthenticationProviderInterface, Authenticat
     public function supports(TokenInterface $token)
     {
         return $token instanceof UiTIDToken;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
-    {
-        return new Response('Access denied.', Response::HTTP_FORBIDDEN);
     }
 }
