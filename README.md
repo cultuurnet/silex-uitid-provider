@@ -46,12 +46,12 @@ After authentication, they will be redirected back to the URL set in the destina
 
 ## 2. User info
 
-You can access info for the current user, or other users, by using the following services provided by the `UserServiceProvider` that was registered as mentioned above:
+You can access info for the current user, or other users, by using the following services provided by the `UserServiceProvider` that you registered in step 1:
 
-* `$app['uitid_user_session_service']`: An instance of `CultuurNet\UiTIDProvider\User\UserSessionService`, which can return minimal user info of the currently logged in user.
-* `$app['uitid_user_session_data']`: An instance of `CultuurNet\Auth\User`, which contains the user id and access token. (Also known as the "minimal user info".)
-* `$app['uitid_user_service']`: An instance of `CultuurNet\UiTIDProvider\User\UserService`, which can return user data by id or username.
-* `$app['uitid_user']`: An instance of `CultuurNet\UiTIDProvider\User\User`, which contains all extra info of the currently logged in user.
+* **`$app['uitid_user_session_service']`**: An instance of `CultuurNet\UiTIDProvider\User\UserSessionService`, which can return minimal user info of the currently logged in user.
+* **`$app['uitid_user_session_data']`**: An instance of `CultuurNet\Auth\User`, which contains the user id and access token. (Also known as the "minimal user info".)
+* **`$app['uitid_user_service']`**: An instance of `CultuurNet\UiTIDProvider\User\UserService`, which can return user data by id or username.
+* **`$app['uitid_user']`**: An instance of `CultuurNet\UiTIDProvider\User\User`, which contains all extra info of the currently logged in user.
 
 Optionally, you can mount the `UserControllerProvider` to a path of your liking:
 
