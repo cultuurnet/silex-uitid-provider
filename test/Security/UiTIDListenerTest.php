@@ -90,11 +90,18 @@ class UiTIDListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function it_denies_access_when_no_minimal_user_info_is_found()
     {
-        $response = new Response('Access denied.', Response::HTTP_FORBIDDEN);
-
+        // Makes sure that a Response object with status code 403 is passed to
+        // setResponse().
+        // Don't use with(new Response(...)) as responses contain datetime
+        // information that may not be the same as the actual response, which
+        // may cause random failing tests.
         $this->event->expects($this->once())
             ->method('setResponse')
-            ->with($response);
+            ->will($this->returnCallback(function ($response) {
+                /* @var Response $response */
+                $this->assertInstanceOf(Response::class, $response);
+                $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+            }));
 
         $this->listener->handle($this->event);
     }
@@ -111,11 +118,18 @@ class UiTIDListenerTest extends \PHPUnit_Framework_TestCase
             ->with($this->minimalToken)
             ->willThrowException(new AuthenticationException());
 
-        $response = new Response('Access denied.', Response::HTTP_FORBIDDEN);
-
+        // Makes sure that a Response object with status code 403 is passed to
+        // setResponse().
+        // Don't use with(new Response(...)) as responses contain datetime
+        // information that may not be the same as the actual response, which
+        // may cause random failing tests.
         $this->event->expects($this->once())
             ->method('setResponse')
-            ->with($response);
+            ->will($this->returnCallback(function ($response) {
+                /* @var Response $response */
+                $this->assertInstanceOf(Response::class, $response);
+                $this->assertEquals(Response::HTTP_FORBIDDEN, $response->getStatusCode());
+            }));
 
         $this->listener->handle($this->event);
     }
@@ -142,6 +156,8 @@ class UiTIDListenerTest extends \PHPUnit_Framework_TestCase
             ->method('setToken')
             ->with($authToken);
 
+        // Make sure no Response is set, so the request can be handled by the
+        // actual controllers.
         $this->event->expects($this->never())
             ->method('setResponse');
 
