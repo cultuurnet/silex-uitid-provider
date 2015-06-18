@@ -5,7 +5,7 @@
 
 Contains various Controller- and Service Providers for Silex projects to integrate UiTID authentication.
 
-## Dependencies
+## 0. Dependencies
 
 You'll need the `Session` and `UrlGenerator` services provided by Silex:
 
@@ -26,11 +26,12 @@ Lastly you will have to register the `CultureFeedServiceProvider`, with some add
     	'culturefeed.consumer.secret' => 'example-consumer-secret',
 	));
 	
-## UiTID Authentication
+## 1. UiTID Authentication
 
-You will need to register the `AuthServiceProvider` like this:
+You will need to register the `AuthServiceProvider` and `UserServiceProvider` like this:
 
 	$app->register(new CultuurNet\UiTIDProvider\Auth\AuthServiceProvider());
+	$app->register(new CultuurNet\UiTIDProvider\User\UserServiceProvider());
 	
 And you will need to mount the `AuthControllerProvider` to a path of your liking:
 
@@ -43,17 +44,13 @@ At this point, your visitors can authenticate if you redirect them to [http://yo
 
 After authentication, they will be redirected back to the URL set in the destination parameter. In this case, `http://your-website.com`.
 
-## User info
+## 2. User info
 
-You can access info for the current user, or other users, by registering the `UserServiceProvider`:
+You can access info for the current user, or other users, by using the following services provided by the `UserServiceProvider` that was registered as mentioned above:
 
-	$app->register(new CultuurNet\UiTIDProvider\User\UserServiceProvider());
-	
-This provides multiple services:
-
-* `$app['uitid_user_service']`: An instance of `CultuurNet\UiTIDProvider\User\UserService`, which can return user data by id or username.
 * `$app['uitid_user_session_service']`: An instance of `CultuurNet\UiTIDProvider\User\UserSessionService`, which can return minimal user info of the currently logged in user.
 * `$app['uitid_user_session_data']`: An instance of `CultuurNet\Auth\User`, which contains the user id and access token. (Also known as the "minimal user info".)
+* `$app['uitid_user_service']`: An instance of `CultuurNet\UiTIDProvider\User\UserService`, which can return user data by id or username.
 * `$app['uitid_user']`: An instance of `CultuurNet\UiTIDProvider\User\User`, which contains all extra info of the currently logged in user.
 
 Optionally, you can mount the `UserControllerProvider` to a path of your liking:
@@ -64,6 +61,35 @@ This will provide the following paths (in this example prefixed with `uitid`):
 
 * `uitid/user`: Returns data of the current user in JSON format.
 * `uitid/logout`: Invalidates the current session and logs the user out.
+
+## 3. Restricting access to paths for non-authenticated users.
+
+You can easily restrict access to paths for non-authenticated users by registering the `SecurityServiceProvider` and `UiTIDSecurityServiceProvider`:
+
+	$app->register(new \Silex\Provider\SecurityServiceProvider());
+	$app->register(new \CultuurNet\UiTIDProvider\Security\UiTIDSecurityServiceProvider());
+	
+Afterwards you'll have to configure the firewall settings. Make sure to allow access to the paths that you mounted in step 1, use the `uitid` authenticator, and use the `$app['uitid_firewall_user_provider']` as the user provider.
+
+Here's an example of a valid firewall configuration:
+
+	$app['security.firewalls'] = array(
+   		'unsecured' => array(
+        	'pattern' => '^/culturefeed/oauth',
+    	),
+    	'secured' => array(
+       	 	'pattern' => '^.*$',
+        	'uitid' => true,
+        	'users' => $app['uitid_firewall_user_provider'],
+    	),
+	);
+	
+This example will only allow access to the paths beginning wih `/culturefeed/oauth` until the user is logged in. All other paths will return a response with status code 403.
+	
+More info on firewall configuration can be found in the [Silex documentation](http://silex.sensiolabs.org/doc/providers/security.html).
+
+
+
 
 	
 
