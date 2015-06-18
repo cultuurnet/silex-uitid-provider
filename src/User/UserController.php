@@ -3,6 +3,7 @@
 namespace CultuurNet\UiTIDProvider\User;
 
 use CultuurNet\UDB3\Symfony\JsonLdResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController
@@ -30,18 +31,20 @@ class UserController
     }
 
     /**
-     * @return JsonLdResponse
+     * @return JsonResponse
      */
     public function getUser()
     {
         $user = null;
-        $userSessionData = $this->userSessionService->getMinimalUserInfo();
+        $minimalUserInfo = $this->userSessionService->getMinimalUserInfo();
 
-        if (!is_null($userSessionData)) {
-            $user = $this->userService->getUser($userSessionData->getId());
+        if (is_null($minimalUserInfo)) {
+            return new Response('No active user.', Response::HTTP_NOT_FOUND);
         }
 
-        return JsonLdResponse::create()
+        $user = $this->userService->getUser($minimalUserInfo->getId());
+
+        return JsonResponse::create()
             ->setData($user)
             ->setPrivate();
     }

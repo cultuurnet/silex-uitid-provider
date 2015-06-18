@@ -31,7 +31,7 @@ class UserService implements UserServiceInterface
         try {
             $cfUser = $this->cultureFeed->getUser($id, self::INCLUDE_PRIVATE_FIELDS);
 
-            // Cast to a User object that can be safely json encoded.
+            // Cast to a User object that can be safely encoded to json.
             return User::fromCultureFeedUser($cfUser);
         } catch (\CultureFeed_ParseException $e) {
             return null;
