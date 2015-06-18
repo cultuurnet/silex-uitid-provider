@@ -55,11 +55,6 @@ class UiTIDListenerTest extends \PHPUnit_Framework_TestCase
     protected $event;
 
     /**
-     * @var Response
-     */
-    protected $accessDeniedResponse;
-
-    /**
      * @var UiTIDListener
      */
     protected $listener;
@@ -82,7 +77,6 @@ class UiTIDListenerTest extends \PHPUnit_Framework_TestCase
             new Request(),
             HttpKernelInterface::MASTER_REQUEST
         ]);
-        $this->accessDeniedResponse = new Response('Access denied.', Response::HTTP_FORBIDDEN);
 
         $this->listener = new UiTIDListener(
             $this->authenticationManager,
@@ -96,9 +90,11 @@ class UiTIDListenerTest extends \PHPUnit_Framework_TestCase
      */
     public function it_denies_access_when_no_minimal_user_info_is_found()
     {
+        $response = new Response('Access denied.', Response::HTTP_FORBIDDEN);
+
         $this->event->expects($this->once())
             ->method('setResponse')
-            ->with($this->accessDeniedResponse);
+            ->with($response);
 
         $this->listener->handle($this->event);
     }
@@ -115,9 +111,11 @@ class UiTIDListenerTest extends \PHPUnit_Framework_TestCase
             ->with($this->minimalToken)
             ->willThrowException(new AuthenticationException());
 
+        $response = new Response('Access denied.', Response::HTTP_FORBIDDEN);
+
         $this->event->expects($this->once())
             ->method('setResponse')
-            ->with($this->accessDeniedResponse);
+            ->with($response);
 
         $this->listener->handle($this->event);
     }
