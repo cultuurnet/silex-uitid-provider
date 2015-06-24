@@ -2,7 +2,6 @@
 
 namespace CultuurNet\UiTIDProvider\Security;
 
-use CultuurNet\Auth\TokenCredentials;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 
 class UiTIDToken extends AbstractToken

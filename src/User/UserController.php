@@ -2,7 +2,6 @@
 
 namespace CultuurNet\UiTIDProvider\User;
 
-use CultuurNet\UDB3\Symfony\JsonLdResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
