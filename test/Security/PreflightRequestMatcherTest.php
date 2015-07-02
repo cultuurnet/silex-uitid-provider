@@ -1,12 +1,9 @@
 <?php
 
-
 namespace CultuurNet\UiTIDProvider\Security;
-
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Client;
 
 class PreflightRequestMatcherTest extends \PHPUnit_Framework_TestCase
 {
@@ -61,5 +58,4 @@ class PreflightRequestMatcherTest extends \PHPUnit_Framework_TestCase
             ['PATCH'],
         ];
     }
-
 }
