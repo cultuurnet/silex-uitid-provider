@@ -15,11 +15,6 @@ class UserService implements UserServiceInterface
     protected $cultureFeed;
 
     /**
-     * @var User[]
-     */
-    protected $userCache;
-
-    /**
      * @param \CultureFeed $cultureFeed
      */
     public function __construct(\CultureFeed $cultureFeed)
@@ -33,19 +28,11 @@ class UserService implements UserServiceInterface
      */
     public function getUser($id)
     {
-        if (!empty($this->userCache[$id])) {
-            return $this->userCache[$id];
-        }
-
         try {
             $cfUser = $this->cultureFeed->getUser($id, self::INCLUDE_PRIVATE_FIELDS);
 
             // Cast to a User object that can be safely encoded to json.
-            $user = User::fromCultureFeedUser($cfUser);
-
-            $this->userCache[$id] = $user;
-
-            return $user;
+            return User::fromCultureFeedUser($cfUser);
         } catch (\CultureFeed_ParseException $e) {
             return null;
         }
