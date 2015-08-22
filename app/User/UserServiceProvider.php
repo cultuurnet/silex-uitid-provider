@@ -13,7 +13,16 @@ class UserServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app['uitid_user_service'] = $app->share(function (Application $app) {
-            return new UserService($app['culturefeed']);
+            $service = new CachedUserService(
+                new UserService($app['culturefeed'])
+            );
+
+            $currentUser = $app['uitid_user_session_data_complete'];
+            if (!is_null($currentUser)) {
+                $service->cacheUser($currentUser);
+            }
+
+            return $service;
         });
 
         $app['uitid_user_session_service'] = $app->share(function (Application $app) {
@@ -26,7 +35,17 @@ class UserServiceProvider implements ServiceProviderInterface
             return $userSessionService->getMinimalUserInfo();
         });
 
+        $app['uitid_user_session_data_complete'] = $app->share(function (Application $app) {
+            /* @var UserSessionService $userSessionService */
+            $userSessionService = $app['uitid_user_session_service'];
+            return $userSessionService->getUser();
+        });
+
         $app['uitid_user'] = $app->share(function (Application $app) {
+            if (!is_null($app['uitid_user_session_data_complete'])) {
+                return $app['uitid_user_session_data_complete'];
+            }
+
             /* @var \Cultuurnet\Auth\User $userSessionData */
             $userSessionData = $app['uitid_user_session_data'];
             if (is_null($userSessionData)) {
@@ -35,7 +54,13 @@ class UserServiceProvider implements ServiceProviderInterface
 
             /* @var UserService $userService */
             $userService = $app['uitid_user_service'];
-            return $userService->getUser($userSessionData->getId());
+            $user = $userService->getUser($userSessionData->getId());
+
+            /* @var UserSessionService $userSessionService */
+            $userSessionService = $app['uitid_user_session_service'];
+            $userSessionService->setUser($user);
+
+            return $user;
         });
     }
 

@@ -8,9 +8,14 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class UserSessionService implements UserSessionServiceInterface
 {
     /**
+     * Name of the session variable that stores the user's minimal info.
+     */
+    const MINIMAL_USER_SESSION_VARIABLE = 'culturefeed_minimal_user';
+
+    /**
      * Name of the session variable that stores the user.
      */
-    const USER_VARIABLE = 'culturefeed_user';
+    const USER_SESSION_VARIABLE = 'culturefeed_user';
 
     /**
      * @var SessionInterface
@@ -30,7 +35,7 @@ class UserSessionService implements UserSessionServiceInterface
      */
     public function setMinimalUserInfo(MinimalUserInfo $user)
     {
-        $this->session->set(self::USER_VARIABLE, $user);
+        $this->session->set(self::MINIMAL_USER_SESSION_VARIABLE, $user);
     }
 
     /**
@@ -38,7 +43,23 @@ class UserSessionService implements UserSessionServiceInterface
      */
     public function getMinimalUserInfo()
     {
-        return $this->session->get(self::USER_VARIABLE);
+        return $this->session->get(self::MINIMAL_USER_SESSION_VARIABLE);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user)
+    {
+        $this->session->set(self::USER_SESSION_VARIABLE, $user);
+    }
+
+    /**
+     * @return User|null
+     */
+    public function getUser()
+    {
+        return $this->session->get(self::USER_SESSION_VARIABLE);
     }
 
     public function logout()

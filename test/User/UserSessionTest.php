@@ -24,6 +24,11 @@ class UserSessionTest extends \PHPUnit_Framework_TestCase
      */
     protected $service;
 
+    /**
+     * @var User
+     */
+    protected $user;
+
     public function setUp()
     {
         $this->session = new Session(new MockArraySessionStorage());
@@ -32,6 +37,11 @@ class UserSessionTest extends \PHPUnit_Framework_TestCase
         $id = 1;
         $credentials = new TokenCredentials('token', 'secret');
         $this->minimalUserInfo = new MinimalUserInfo($id, $credentials);
+
+        $this->user = new User();
+        $this->user->nick = 'foo_bar';
+        $this->user->id = $id;
+        $this->user->mbox = 'foo@bar.com';
     }
 
     /**
@@ -54,11 +64,29 @@ class UserSessionTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
+    public function it_can_store_and_retrieve_the_complete_user_object()
+    {
+        $this->service->setUser($this->user);
+        $this->assertEquals($this->user, $this->service->getUser());
+    }
+
+    /**
+     * @test
+     */
+    public function it_returns_null_when_no_complete_user_object_is_set()
+    {
+        $this->assertNull($this->service->getUser());
+    }
+
+    /**
+     * @test
+     */
     public function it_removes_the_minimal_user_info_when_logging_out()
     {
         $this->service->setMinimalUserInfo($this->minimalUserInfo);
         $this->service->logout();
 
         $this->assertNull($this->service->getMinimalUserInfo());
+        $this->assertNull($this->service->getUser());
     }
 }
