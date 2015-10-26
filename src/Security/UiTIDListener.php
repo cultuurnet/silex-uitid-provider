@@ -60,7 +60,7 @@ class UiTIDListener implements ListenerInterface
             }
         }
 
-        $response = new Response('Access denied.', Response::HTTP_FORBIDDEN);
+        $response = new Response('Unauthorized access.', Response::HTTP_UNAUTHORIZED);
         $event->setResponse($response);
     }
 }
