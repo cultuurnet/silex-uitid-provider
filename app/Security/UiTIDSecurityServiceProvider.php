@@ -18,10 +18,14 @@ class UiTIDSecurityServiceProvider implements ServiceProviderInterface
 
         $app['cors_preflight_request_matcher'] = new PreflightRequestMatcher();
 
-        $app['security.authentication_listener.factory.uitid'] = $app->protect(function ($name, $options) use ($app) {
-            $app['security.authentication_provider.' . $name . '.uitid'] = $app->share(function () use ($app) {
+        $app['security.authentication_provider.uitid._proto'] = $app->protect(function () use ($app) {
+            return $app->share(function () use ($app) {
                 return new UiTIDAuthenticator($app['uitid_user_service']);
             });
+        });
+
+        $app['security.authentication_listener.factory.uitid'] = $app->protect(function ($name, $options) use ($app) {
+            $app['security.authentication_provider.' . $name . '.uitid'] = $app['security.authentication_provider.uitid._proto']($name, $options);
 
             $app['security.authentication_listener.' . $name . '.uitid'] = $app->share(function () use ($app) {
                 return new UiTIDListener(
