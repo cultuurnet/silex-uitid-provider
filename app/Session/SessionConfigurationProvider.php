@@ -19,10 +19,10 @@ class SessionConfigurationProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         /**
-         * Keep the session for 1 year
+         * Keep the session until the browser is closed
          */
         $app['session.storage.options'] = [
-            'cookie_lifetime' => 31536000
+            'cookie_lifetime' => 0
         ];
     }
 
