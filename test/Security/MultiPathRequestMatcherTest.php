@@ -4,9 +4,65 @@ namespace CultuurNet\UiTIDProvider\Security;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 
 class MultiPathRequestMatcherTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var RequestMatcherInterface
+     */
+    private $requestMatcher;
+
+    public function setUp()
+    {
+        $this->requestMatcher = new MultiPathRequestMatcher([
+            '^/some/path',
+            '^/some/other/path'
+        ]);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_match_requests_against_multiple_paths()
+    {
+        $matchingRequest = new Request();
+        $matchingRequest->server->set('REQUEST_URI', '/some/path');
+        $matchingRequest->initialize(
+            $matchingRequest->query->all(),
+            $matchingRequest->request->all(),
+            $matchingRequest->attributes->all(),
+            $matchingRequest->cookies->all(),
+            $matchingRequest->files->all(),
+            $matchingRequest->server->all(),
+            $matchingRequest->getContent()
+        );
+
+        $matches = $this->requestMatcher->matches($matchingRequest);
+        $this->assertTrue($matches);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_not_match_a_path_not_in_the_multi_path_configuration()
+    {
+        $nonMatchingRequest = new Request();
+        $nonMatchingRequest->server->set('REQUEST_URI', '/incorrect/path');
+        $nonMatchingRequest->initialize(
+            $nonMatchingRequest->query->all(),
+            $nonMatchingRequest->request->all(),
+            $nonMatchingRequest->attributes->all(),
+            $nonMatchingRequest->cookies->all(),
+            $nonMatchingRequest->files->all(),
+            $nonMatchingRequest->server->all(),
+            $nonMatchingRequest->getContent()
+        );
+
+        $matches = $this->requestMatcher->matches($nonMatchingRequest);
+        $this->assertFalse($matches);
+    }
+
     /**
      * @test
      */
@@ -16,24 +72,5 @@ class MultiPathRequestMatcherTest extends \PHPUnit_Framework_TestCase
 
         $matches = $requestMatcher->matches(new Request());
         $this->assertFalse($matches);
-    }
-
-    /**
-     * @test
-     */
-    public function it_should_match_requests_against_multiple_paths()
-    {
-        $requestMatcher = new MultiPathRequestMatcher([
-            '^/some/path',
-            '^/some/other/path'
-        ]);
-        $request = new Request();
-        $request->server->set('REQUEST_URI', '/some/path');
-        $request->initialize($request->query->all(), $request->request->all(), $request->attributes->all(), $request->cookies->all(), $request->files->all(), $request->server->all(), $request->getContent());
-
-        var_dump($request->getPathInfo());
-
-        $matches = $requestMatcher->matches($request);
-        $this->assertTrue($matches);
     }
 }
