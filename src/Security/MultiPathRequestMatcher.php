@@ -12,7 +12,7 @@ class MultiPathRequestMatcher implements RequestMatcherInterface
      */
     protected $paths;
 
-    public function __construct(Array $paths)
+    public function __construct(array $paths)
     {
         $this->paths = $paths;
     }
