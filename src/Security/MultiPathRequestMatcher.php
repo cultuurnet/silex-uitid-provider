@@ -12,9 +12,15 @@ class MultiPathRequestMatcher implements RequestMatcherInterface
      */
     protected $paths;
 
-    public function __construct(array $paths)
+    /**
+     * @var String[]
+     */
+    protected $methods;
+
+    public function __construct(array $paths, array $methods = [])
     {
         $this->paths = $paths;
+        $this->methods = $methods;
     }
 
     public function matches(Request $request)
@@ -27,6 +33,16 @@ class MultiPathRequestMatcher implements RequestMatcherInterface
 
             while ($i < $pathCount && !$matchesPath) {
                 $matchesPath = !!preg_match('{'.$this->paths[$i].'}', rawurldecode($request->getPathInfo()));
+
+                // if we have a matching path and we are checking for methods
+                // make sure the method matches as well
+                if(!empty($this->methods)
+                    && $this->methods[$i]
+                    && $matchesPath
+                    && $this->methods[$i] != $request->getMethod()
+                ) {
+                    $matchesPath = false;
+                }
                 $i++;
             }
         }
