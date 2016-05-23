@@ -73,4 +73,30 @@ class MultiPathRequestMatcherTest extends \PHPUnit_Framework_TestCase
         $matches = $requestMatcher->matches(new Request());
         $this->assertFalse($matches);
     }
+
+    /**
+     * @test
+     */
+    public function it_should_match_the_method_when_provided()
+    {
+        $this->requestMatcher = new MultiPathRequestMatcher(
+            [
+                '^/some/path',
+                '^/some/other/path'
+            ],
+            [
+                'GET',
+                'DELETE'
+            ]
+        );
+
+        $matchingRequest = Request::create('/some/path', 'GET');
+        $matches = $this->requestMatcher->matches($matchingRequest);
+        $this->assertTrue($matches);
+
+
+        $nonMatchingRequest = Request::create('/some/other/path', 'GET');
+        $matches = $this->requestMatcher->matches($nonMatchingRequest);
+        $this->assertFalse($matches);
+    }
 }
