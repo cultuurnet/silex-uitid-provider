@@ -25,7 +25,11 @@ class UiTIDSecurityServiceProvider implements ServiceProviderInterface
         });
 
         $app['security.authentication_listener.factory.uitid'] = $app->protect(function ($name, $options) use ($app) {
-            $app['security.authentication_provider.' . $name . '.uitid'] = $app['security.authentication_provider.uitid._proto']($name, $options);
+            $app['security.authentication_provider.' . $name . '.uitid'] =
+                $app['security.authentication_provider.uitid._proto'](
+                    $name,
+                    $options
+                );
 
             $app['security.authentication_listener.' . $name . '.uitid'] = $app->share(function () use ($app) {
                 return new UiTIDListener(

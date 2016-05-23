@@ -36,7 +36,7 @@ class MultiPathRequestMatcher implements RequestMatcherInterface
 
                 // if we have a matching path and we are checking for methods
                 // make sure the method matches as well
-                if(!empty($this->methods)
+                if (!empty($this->methods)
                     && $this->methods[$i]
                     && $matchesPath
                     && $this->methods[$i] != $request->getMethod()
