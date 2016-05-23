@@ -24,7 +24,7 @@ class MultiPathRequestMatcherTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_match_requests_against_multiple_paths()
+    public function it_matches_requests_against_multiple_paths()
     {
         $matchingRequest = new Request();
         $matchingRequest->server->set('REQUEST_URI', '/some/path');
@@ -45,7 +45,7 @@ class MultiPathRequestMatcherTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_not_match_a_path_not_in_the_multi_path_configuration()
+    public function it_does_not_match_a_path_not_in_the_multi_path_configuration()
     {
         $nonMatchingRequest = new Request();
         $nonMatchingRequest->server->set('REQUEST_URI', '/incorrect/path');
@@ -66,7 +66,7 @@ class MultiPathRequestMatcherTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_not_match_any_request_when_no_paths_are_provided()
+    public function it_does_not_match_any_request_when_no_paths_are_provided()
     {
         $requestMatcher = new MultiPathRequestMatcher([]);
 
@@ -77,7 +77,7 @@ class MultiPathRequestMatcherTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      */
-    public function it_should_match_the_method_when_provided()
+    public function it_does_match_the_method_when_provided()
     {
         $this->requestMatcher = new MultiPathRequestMatcher(
             [
