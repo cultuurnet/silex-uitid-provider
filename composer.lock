@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "11f00b2f838bebb88a46374245cf7245",
-    "content-hash": "9a2e1c6a16580bfd266c8745f7134243",
+    "hash": "a76dc9fa6734b0ab3e332887cdc4b17c",
+    "content-hash": "932c554bc7748a2fca909e84b27123d6",
     "packages": [
         {
             "name": "cultuurnet/auth",
@@ -91,16 +91,16 @@
         },
         {
             "name": "cultuurnet/culturefeed-php",
-            "version": "v1.6.1",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cultuurnet/culturefeed-php.git",
-                "reference": "aa0656aa939fdff13ec3770d0cc8229c32d0278a"
+                "reference": "8c7414d8230ad886990f687581003b045d2e73aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cultuurnet/culturefeed-php/zipball/aa0656aa939fdff13ec3770d0cc8229c32d0278a",
-                "reference": "aa0656aa939fdff13ec3770d0cc8229c32d0278a",
+                "url": "https://api.github.com/repos/cultuurnet/culturefeed-php/zipball/8c7414d8230ad886990f687581003b045d2e73aa",
+                "reference": "8c7414d8230ad886990f687581003b045d2e73aa",
                 "shasum": ""
             },
             "require": {
@@ -113,7 +113,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-develop": "1.2.x-dev"
+                    "dev-develop": "1.2.x-dev",
+                    "dev-feature/III-1189": "1.5.x-dev"
                 }
             },
             "autoload": {
@@ -154,7 +155,7 @@
                 }
             ],
             "description": "Culturefeed PHP library",
-            "time": "2016-01-08 12:08:20"
+            "time": "2016-08-05 09:35:06"
         },
         {
             "name": "guzzle/guzzle",
@@ -2928,9 +2929,18 @@
             "time": "2015-08-24 13:29:44"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "alias": "1.6",
+            "alias_normalized": "1.6.0.0",
+            "version": "9999999-dev",
+            "package": "cultuurnet/culturefeed-php"
+        }
+    ],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "cultuurnet/culturefeed-php": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
