@@ -12,6 +12,11 @@ class MultiPathRequestMatcher implements RequestMatcherInterface
      */
     protected $paths;
 
+    /**
+     * MultiPathRequestMatcher constructor.
+     * @param array $pathPatterns
+     * @param array $methods
+     */
     public function __construct(array $pathPatterns = [], array $methods = [])
     {
         $paths = [];
@@ -39,6 +44,10 @@ class MultiPathRequestMatcher implements RequestMatcherInterface
         return $matcher;
     }
 
+    /**
+     * @param array $paths
+     * @return MultiPathRequestMatcher
+     */
     public function withPaths(array $paths)
     {
         $matcher = clone $this;
@@ -46,6 +55,10 @@ class MultiPathRequestMatcher implements RequestMatcherInterface
         return $matcher;
     }
 
+    /**
+     * @param Request $request
+     * @return bool
+     */
     public function matches(Request $request)
     {
         $match = false;
