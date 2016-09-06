@@ -8,45 +8,82 @@ use Symfony\Component\HttpFoundation\Request;
 class MultiPathRequestMatcher implements RequestMatcherInterface
 {
     /**
-     * @var String[]
+     * @var Path[]
      */
     protected $paths;
 
-    /**
-     * @var String[]
-     */
-    protected $methods;
-
-    public function __construct(array $paths, array $methods = [])
+    public function __construct(array $pathPatterns = [], array $methods = [])
     {
+        $paths = [];
+
+        foreach ($pathPatterns as $index => $pathPattern) {
+            $paths[] = new Path(
+                $pathPattern,
+                array_key_exists($index, $methods) ? [$methods[$index]] : []
+            );
+        }
+
         $this->paths = $paths;
-        $this->methods = $methods;
+    }
+
+    /**
+     * Creates a new request matcher with the addition of the provided path.
+     *
+     * @param Path $path
+     * @return MultiPathRequestMatcher
+     */
+    public function withPath(Path $path)
+    {
+        $matcher = clone $this;
+        $matcher->paths[] = $path;
+        return $matcher;
+    }
+
+    public function withPaths(array $paths)
+    {
+        $matcher = clone $this;
+        $matcher->paths = array_merge($matcher->paths, $paths);
+        return $matcher;
     }
 
     public function matches(Request $request)
     {
-        $matchesPath = false;
+        $match = false;
 
         if (is_array($this->paths)) {
             $i = 0;
             $pathCount = count($this->paths);
 
-            while ($i < $pathCount && !$matchesPath) {
-                $matchesPath = !!preg_match('{'.$this->paths[$i].'}', rawurldecode($request->getPathInfo()));
+            while ($i < $pathCount && !$match) {
+                $match = !!preg_match('{'.$this->paths[$i]->getPattern().'}', rawurldecode($request->getPathInfo()));
+
+                $allowedMethods = $this->paths[$i]->getMethods();
 
                 // if we have a matching path and we are checking for methods
                 // make sure the method matches as well
-                if (!empty($this->methods)
-                    && $this->methods[$i]
-                    && $matchesPath
-                    && $this->methods[$i] != $request->getMethod()
-                ) {
-                    $matchesPath = false;
+                if ($match && !empty($allowedMethods)) {
+                    $requestMethod = $request->getMethod();
+                    $matchingMethods = array_filter($allowedMethods, function ($method) use ($requestMethod) {
+                        return $requestMethod === $method;
+                    });
+
+                    $match = count($matchingMethods) > 0;
                 }
+
                 $i++;
             }
         }
 
-        return $matchesPath;
+        return $match;
+    }
+
+    /**
+     * @param Path[] $paths
+     * @return MultiPathRequestMatcher
+     */
+    public static function fromPaths(array $paths)
+    {
+        $matcher = new self();
+        return $matcher->withPaths($paths);
     }
 }
