@@ -99,4 +99,50 @@ class MultiPathRequestMatcherTest extends \PHPUnit_Framework_TestCase
         $matches = $this->requestMatcher->matches($nonMatchingRequest);
         $this->assertFalse($matches);
     }
+
+    /**
+     * @test
+     */
+    public function it_should_match_against_one_of_mutiple_methods_on_the_same_path()
+    {
+        $matcher = new MultiPathRequestMatcher();
+        $matcher = $matcher->withPath(new Path('^/foo/bar', ['DELETE', 'POST']));
+
+        $request = Request::create('/foo/bar', 'POST');
+        $match = $matcher->matches($request);
+        $this->assertTrue($match);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_not_match_against_a_missing_method_of_multi_method_path()
+    {
+        $matcher = new MultiPathRequestMatcher();
+        $matcher = $matcher->withPath(new Path('^/foo/bar', ['DELETE', 'POST']));
+
+        $request = Request::create('/foo/bar', 'GET');
+        $match = $matcher->matches($request);
+        $this->assertFalse($match);
+    }
+
+    /**
+     * @test
+     */
+    public function it_should_match_against_paths_created_with_from_paths_method()
+    {
+        $matcher = MultiPathRequestMatcher::fromPaths([
+            new Path('^/some/path', ['GET', 'POST']),
+            new Path('^/some/other/path', 'DELETE')
+        ]);
+
+        $matchingRequest = Request::create('/some/path', 'GET');
+        $matches = $matcher->matches($matchingRequest);
+        $this->assertTrue($matches);
+
+
+        $nonMatchingRequest = Request::create('/some/other/path', 'GET');
+        $matches = $matcher->matches($nonMatchingRequest);
+        $this->assertFalse($matches);
+    }
 }
