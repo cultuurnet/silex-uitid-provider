@@ -2,9 +2,6 @@
 
 namespace CultuurNet\UiTIDProvider\Security;
 
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Zend\Validator\Regex;
-
 class Path
 {
     /**
