@@ -2,6 +2,9 @@
 
 namespace CultuurNet\UiTIDProvider\Security;
 
+/**
+ * @deprecated Use \Symfony\Component\HttpFoundation\RequestMatcher instead.
+ */
 class Path
 {
     /**
