@@ -5,6 +5,10 @@ namespace CultuurNet\UiTIDProvider\Security;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * @deprecated Use \CultuurNet\UDB3\HttpFoundation\RequestMatcher\PreflightRequestMatcher instead.
+ * @see https://github.com/cultuurnet/udb3-http-foundation/blob/master/src/RequestMatcher/PreflightRequestMatcher.php
+ */
 class PreflightRequestMatcher implements RequestMatcherInterface
 {
     public function matches(Request $request)
