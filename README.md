@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/cultuurnet/silex-uitid-provider.svg?branch=master)](https://travis-ci.org/cultuurnet/silex-uitid-provider)
 [![Coverage Status](https://coveralls.io/repos/cultuurnet/silex-uitid-provider/badge.svg?branch=master)](https://coveralls.io/r/cultuurnet/silex-uitid-provider?branch=master)
 
-Contains various Controller- and Service Providers for Silex projects to integrate UiTID authentication.
+Contains various Controller- and Service Providers for Silex 2 projects to integrate UiTID authentication.
 
 ## 0. Dependencies
 
@@ -87,9 +87,3 @@ Here's an example of a valid firewall configuration:
 This example will only allow access to the paths beginning wih `/culturefeed/oauth` until the user is logged in. All other paths will return a response with status code 403.
 	
 More info on firewall configuration can be found in the [Silex documentation](http://silex.sensiolabs.org/doc/providers/security.html).
-
-
-
-
-	
-

@@ -2,72 +2,66 @@
 
 namespace CultuurNet\UiTIDProvider\User;
 
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 class UserServiceProvider implements ServiceProviderInterface
 {
+
     /**
-     * @param Application $app
+     * @inheritdoc
      */
-    public function register(Application $app)
+    public function register(Container $pimple)
     {
-        $app['uitid_user_service'] = $app->share(function (Application $app) {
+        $pimple['uitid_user_service'] = function (Container $pimple) {
             $service = new CachedUserService(
-                new UserService($app['culturefeed'])
+                new UserService($pimple['culturefeed'])
             );
 
-            $currentUser = $app['uitid_user_session_data_complete'];
+            $currentUser = $pimple['uitid_user_session_data_complete'];
             if (!is_null($currentUser)) {
                 $service->cacheUser($currentUser);
             }
 
             return $service;
-        });
+        };
 
-        $app['uitid_user_session_service'] = $app->share(function (Application $app) {
-            return new UserSessionService($app['session']);
-        });
+        $pimple['uitid_user_session_service'] = function (Container $pimple) {
+            return new UserSessionService($pimple['session']);
+        };
 
-        $app['uitid_user_session_data'] = $app->share(function (Application $app) {
+        $pimple['uitid_user_session_data'] = function (Container $pimple) {
             /* @var UserSessionService $userSessionService */
-            $userSessionService = $app['uitid_user_session_service'];
+            $userSessionService = $pimple['uitid_user_session_service'];
             return $userSessionService->getMinimalUserInfo();
-        });
+        };
 
-        $app['uitid_user_session_data_complete'] = $app->share(function (Application $app) {
+        $pimple['uitid_user_session_data_complete'] = function (Container $pimple) {
             /* @var UserSessionService $userSessionService */
-            $userSessionService = $app['uitid_user_session_service'];
+            $userSessionService = $pimple['uitid_user_session_service'];
             return $userSessionService->getUser();
-        });
+        };
 
-        $app['uitid_user'] = $app->share(function (Application $app) {
-            if (!is_null($app['uitid_user_session_data_complete'])) {
-                return $app['uitid_user_session_data_complete'];
+        $pimple['uitid_user'] = function (Container $pimple) {
+            if (!is_null($pimple['uitid_user_session_data_complete'])) {
+                return $pimple['uitid_user_session_data_complete'];
             }
 
             /* @var \Cultuurnet\Auth\User $userSessionData */
-            $userSessionData = $app['uitid_user_session_data'];
+            $userSessionData = $pimple['uitid_user_session_data'];
             if (is_null($userSessionData)) {
                 return null;
             }
 
             /* @var UserService $userService */
-            $userService = $app['uitid_user_service'];
+            $userService = $pimple['uitid_user_service'];
             $user = $userService->getUser($userSessionData->getId());
 
             /* @var UserSessionService $userSessionService */
-            $userSessionService = $app['uitid_user_session_service'];
+            $userSessionService = $pimple['uitid_user_session_service'];
             $userSessionService->setUser($user);
 
             return $user;
-        });
-    }
-
-    /**
-     * @param Application $app
-     */
-    public function boot(Application $app)
-    {
+        };
     }
 }

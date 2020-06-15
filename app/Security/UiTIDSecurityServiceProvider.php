@@ -2,56 +2,51 @@
 
 namespace CultuurNet\UiTIDProvider\Security;
 
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 class UiTIDSecurityServiceProvider implements ServiceProviderInterface
 {
     /**
      * @inheritdoc
      */
-    public function register(Application $app)
+    public function register(Container $pimple)
     {
-        $app['uitid_firewall_user_provider'] = $app->share(function (Application $app) {
-            return new UiTIDUserProvider($app['uitid_user_service']);
+        $pimple['uitid_firewall_user_provider'] = function (Container $pimple) {
+            return new UiTIDUserProvider($pimple['uitid_user_service']);
+        };
+
+        $pimple['cors_preflight_request_matcher'] = new PreflightRequestMatcher();
+
+        $pimple['security.authentication_provider.uitid._proto'] = $pimple->protect(function () use ($pimple) {
+            return function () use ($pimple) {
+                return new UiTIDAuthenticator($pimple['uitid_user_service']);
+            };
         });
 
-        $app['cors_preflight_request_matcher'] = new PreflightRequestMatcher();
+        $pimple['security.authentication_listener.factory.uitid'] = $pimple->protect(
+            function ($name, $options) use ($pimple) {
+                $pimple['security.authentication_provider.' . $name . '.uitid'] =
+                    $pimple['security.authentication_provider.uitid._proto'](
+                        $name,
+                        $options
+                    );
 
-        $app['security.authentication_provider.uitid._proto'] = $app->protect(function () use ($app) {
-            return $app->share(function () use ($app) {
-                return new UiTIDAuthenticator($app['uitid_user_service']);
-            });
-        });
+                $pimple['security.authentication_listener.' . $name . '.uitid'] = function () use ($pimple) {
+                    return new UiTIDListener(
+                        $pimple['security.authentication_manager'],
+                        $pimple['security.token_storage'],
+                        $pimple['uitid_user_session_service']
+                    );
+                };
 
-        $app['security.authentication_listener.factory.uitid'] = $app->protect(function ($name, $options) use ($app) {
-            $app['security.authentication_provider.' . $name . '.uitid'] =
-                $app['security.authentication_provider.uitid._proto'](
-                    $name,
-                    $options
+                return array(
+                    'security.authentication_provider.' . $name . '.uitid',
+                    'security.authentication_listener.' . $name . '.uitid',
+                    null,
+                    'pre_auth',
                 );
-
-            $app['security.authentication_listener.' . $name . '.uitid'] = $app->share(function () use ($app) {
-                return new UiTIDListener(
-                    $app['security.authentication_manager'],
-                    $app['security.token_storage'],
-                    $app['uitid_user_session_service']
-                );
-            });
-
-            return array(
-                'security.authentication_provider.' . $name . '.uitid',
-                'security.authentication_listener.' . $name . '.uitid',
-                null,
-                'pre_auth',
-            );
-        });
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function boot(Application $app)
-    {
+            }
+        );
     }
 }

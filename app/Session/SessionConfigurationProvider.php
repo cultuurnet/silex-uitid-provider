@@ -2,8 +2,8 @@
 
 namespace CultuurNet\UiTIDProvider\Session;
 
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 /**
  * Provides a default session configuration for UiTID projects.
@@ -13,23 +13,17 @@ use Silex\ServiceProviderInterface;
  */
 class SessionConfigurationProvider implements ServiceProviderInterface
 {
+
     /**
-     * @param Application $app
+     * @inheritdoc
      */
-    public function register(Application $app)
+    public function register(Container $pimple)
     {
         /**
          * Keep the session until the browser is closed
          */
-        $app['session.storage.options'] = [
+        $pimple['session.storage.options'] = [
             'cookie_lifetime' => 0
         ];
-    }
-
-    /**
-     * @param Application $app
-     */
-    public function boot(Application $app)
-    {
     }
 }

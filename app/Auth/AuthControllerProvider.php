@@ -2,13 +2,9 @@
 
 namespace CultuurNet\UiTIDProvider\Auth;
 
-use CultuurNet\UiTIDProvider\User\UserSessionServiceInterface;
+use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Silex\ControllerCollection;
-use Silex\ControllerProviderInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class AuthControllerProvider implements ControllerProviderInterface
 {
@@ -21,13 +17,13 @@ class AuthControllerProvider implements ControllerProviderInterface
      */
     public function connect(Application $app)
     {
-        $app['uitid_auth_controller'] = $app->share(function (Application $app) {
+        $app['uitid_auth_controller'] = function (Application $app) {
             return new AuthController(
                 $app['uitid_auth_service'],
                 $app['uitid_user_session_service'],
                 $app['url_generator']
             );
-        });
+        };
 
         $controllers = $app['controllers_factory'];
 

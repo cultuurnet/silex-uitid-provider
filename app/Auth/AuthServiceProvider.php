@@ -2,31 +2,23 @@
 
 namespace CultuurNet\UiTIDProvider\Auth;
 
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 class AuthServiceProvider implements ServiceProviderInterface
 {
-    /**
-     * @param Application $app
-     */
-    public function register(Application $app)
-    {
-        $app['uitid_auth_service'] = $app->share(
-            function ($app) {
-                return new AuthService(
-                    $app['culturefeed.endpoint'],
-                    $app['culturefeed_consumer_credentials'],
-                    $app['session']
-                );
-            }
-        );
-    }
 
     /**
-     * @param Application $app
+     * @inheritdoc
      */
-    public function boot(Application $app)
+    public function register(Container $pimple)
     {
+        $pimple['uitid_auth_service'] = function (Container $pimple) {
+            return new AuthService(
+                $pimple['culturefeed.endpoint'],
+                $pimple['culturefeed_consumer_credentials'],
+                $pimple['session']
+            );
+        };
     }
 }

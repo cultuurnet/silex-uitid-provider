@@ -5,50 +5,45 @@ namespace CultuurNet\UiTIDProvider\CultureFeed;
 use CultuurNet\Auth\ConsumerCredentials;
 use CultuurNet\Auth\TokenCredentials;
 use CultuurNet\UiTIDProvider\User\UserSessionService;
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 class CultureFeedServiceProvider implements ServiceProviderInterface
 {
+
     /**
-     * @param Application $app
+     * @inheritdoc
      */
-    public function register(Application $app)
+    public function register(Container $pimple)
     {
-        $app['culturefeed_token_credentials'] = $app->share(
-            function (Application $app) {
-                /* @var UserSessionService $userSessionService */
-                $userSessionService = $app['uitid_user_session_service'];
-                $user = $userSessionService->getMinimalUserInfo();
-                if (!is_null($user)) {
-                    return $user->getTokenCredentials();
-                } else {
-                    return null;
-                }
+        $pimple['culturefeed_token_credentials'] = function (Container $pimple) {
+            /* @var UserSessionService $userSessionService */
+            $userSessionService = $pimple['uitid_user_session_service'];
+            $user = $userSessionService->getMinimalUserInfo();
+            if (!is_null($user)) {
+                return $user->getTokenCredentials();
+            } else {
+                return null;
             }
-        );
+        };
 
-        $app['culturefeed_consumer_credentials'] = $app->share(
-            function (Application $app) {
-                return new ConsumerCredentials(
-                    $app['culturefeed.consumer.key'],
-                    $app['culturefeed.consumer.secret']
-                );
-            }
-        );
+        $pimple['culturefeed_consumer_credentials'] = function (Container $pimple) {
+            return new ConsumerCredentials(
+                $pimple['culturefeed.consumer.key'],
+                $pimple['culturefeed.consumer.secret']
+            );
+        };
 
-        $app['culturefeed'] = $app->share(
-            function (Application $app) {
-                return new \CultureFeed($app['culturefeed_oauth_client']);
-            }
-        );
+        $pimple['culturefeed'] = function (Container $pimple) {
+            return new \CultureFeed($pimple['culturefeed_oauth_client']);
+        };
 
-        $app['culturefeed_oauth_client'] = $app->share(function (Application $app) {
+        $pimple['culturefeed_oauth_client'] = function (Container $pimple) {
             /* @var ConsumerCredentials $consumerCredentials */
-            $consumerCredentials = $app['culturefeed_consumer_credentials'];
+            $consumerCredentials = $pimple['culturefeed_consumer_credentials'];
 
             /* @var TokenCredentials $tokenCredentials */
-            $tokenCredentials = $app['culturefeed_token_credentials'];
+            $tokenCredentials = $pimple['culturefeed_token_credentials'];
 
             $userCredentialsToken = null;
             $userCredentialsSecret = null;
@@ -63,16 +58,9 @@ class CultureFeedServiceProvider implements ServiceProviderInterface
                 $userCredentialsToken,
                 $userCredentialsSecret
             );
-            $oauthClient->setEndpoint($app['culturefeed.endpoint']);
+            $oauthClient->setEndpoint($pimple['culturefeed.endpoint']);
 
             return $oauthClient;
-        });
-    }
-
-    /**
-     * @param Application $app
-     */
-    public function boot(Application $app)
-    {
+        };
     }
 }

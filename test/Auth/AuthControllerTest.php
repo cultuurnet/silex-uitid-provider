@@ -87,48 +87,37 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
     public function it_redirects_when_connecting()
     {
         // Query parameters that should be passed to the callback url.
-        $query_parameters = ['destination' => $this->destination];
+        $queryParameters = ['destination' => $this->destination];
 
         // Fake callback & authorisation URLs.
-        $callback_url = 'http://callback.com/?destination=' . $this->destination;
-        $authorisation_url = 'http://authorize.com/';
+        $callbackUrl = 'http://callback.com/?destination=' . $this->destination;
+        $authorisationUrl = 'http://authorize.com/';
 
-        // A callback url should be generated, containing the "destination"
-        // query parameter.
-        $this->urlGenerator->expects($this->once())
-            ->method('generate')
-            ->with(
-                AuthController::AUTHORISATION_ROUTE_NAME,
-                $query_parameters,
-                UrlGeneratorInterface::ABSOLUTE_URL
-            )
-            ->willReturn($callback_url);
-
-        // A request token should be generated and stored.
-        $this->authService->expects($this->once())
-            ->method('getRequestToken')
-            ->with($callback_url)
-            ->willReturn($this->requestToken);
-        $this->authService->expects($this->once())
-            ->method('storeRequestToken')
-            ->with($this->requestToken);
-
-        // An authorisation url should be generated, based on the request
-        // token.
-        $this->authService->expects($this->once())
-            ->method('getAuthorizeUrl')
-            ->with($this->requestToken)
-            ->willReturn($authorisation_url);
-
-        // Perform a fake request to the route with the query parameters.
-        $request = new Request($query_parameters);
-        $response = $this->controller->connect($request);
+        $response = $this->mockAuthorisationCall($queryParameters, $callbackUrl, $authorisationUrl);
 
         // Make sure we get a redirect response with the authorisation URL.
         $this->assertEquals(
-            new RedirectResponse($authorisation_url),
+            new RedirectResponse($authorisationUrl),
             $response
         );
+    }
+
+    /**
+     * @test
+     */
+    public function it_adds_skip_confirmation_when_requested()
+    {
+        // Query parameters that should be passed to the callback url.
+        $queryParameters = [
+            'destination' => $this->destination,
+            'skipConfirmation' => 'true',
+        ];
+
+        // Fake callback & authorisation URLs.
+        $callbackUrl = 'http://callback.com/?destination=' . $this->destination . '&skipConfirmation=true';
+        $authorisationUrl = 'http://authorize.com/';
+
+        $this->mockAuthorisationCall($queryParameters, $callbackUrl, $authorisationUrl);
     }
 
     /**
@@ -198,5 +187,42 @@ class AuthControllerTest extends \PHPUnit_Framework_TestCase
             new RedirectResponse($this->defaultDestinationUrl),
             $response
         );
+    }
+
+    /**
+     * Mock the authorisation requests.
+     */
+    private function mockAuthorisationCall($queryParameters, $callbackUrl, $authorizationUrl)
+    {
+        // A callback url should be generated, containing the "destination"
+        // query parameter.
+        $this->urlGenerator->expects($this->once())
+            ->method('generate')
+            ->with(
+                AuthController::AUTHORISATION_ROUTE_NAME,
+                $queryParameters,
+                UrlGeneratorInterface::ABSOLUTE_URL
+            )
+            ->willReturn($callbackUrl);
+
+        // A request token should be generated and stored.
+        $this->authService->expects($this->once())
+            ->method('getRequestToken')
+            ->with($callbackUrl)
+            ->willReturn($this->requestToken);
+        $this->authService->expects($this->once())
+            ->method('storeRequestToken')
+            ->with($this->requestToken);
+
+        // An authorisation url should be generated, based on the request
+        // token.
+        $this->authService->expects($this->once())
+            ->method('getAuthorizeUrl')
+            ->with($this->requestToken)
+            ->willReturn($authorizationUrl);
+
+        // Perform a fake request to the route with the query parameters.
+        $request = new Request($queryParameters);
+        return $this->controller->connect($request);
     }
 }

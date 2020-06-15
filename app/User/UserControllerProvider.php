@@ -2,9 +2,9 @@
 
 namespace CultuurNet\UiTIDProvider\User;
 
+use Silex\Api\ControllerProviderInterface;
 use Silex\Application;
 use Silex\ControllerCollection;
-use Silex\ControllerProviderInterface;
 
 class UserControllerProvider implements ControllerProviderInterface
 {
@@ -17,12 +17,12 @@ class UserControllerProvider implements ControllerProviderInterface
      */
     public function connect(Application $app)
     {
-        $app['uitid_user_controller'] = $app->share(function (Application $app) {
+        $app['uitid_user_controller'] = function (Application $app) {
             return new UserController(
                 $app['uitid_user_service'],
                 $app['uitid_user_session_service']
             );
-        });
+        };
 
         /* @var ControllerCollection $controllers */
         $controllers = $app['controllers_factory'];

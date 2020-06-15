@@ -63,6 +63,10 @@ class AuthController
             $callback_url_params['destination'] = $request->query->get('destination');
         }
 
+        if ($request->query->get('skipConfirmation')) {
+            $callback_url_params['skipConfirmation'] = $request->query->get('skipConfirmation');
+        }
+
         $callback_url = $this->urlGenerator->generate(
             self::AUTHORISATION_ROUTE_NAME,
             $callback_url_params,
