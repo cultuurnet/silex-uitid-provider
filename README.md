@@ -1,3 +1,6 @@
+![Maintenance](https://img.shields.io/badge/status-unmaintained-red.svg)
+## ⚠️ This project is no longer maintained
+
 # Silex UiTID provider
 
 [![Build Status](https://travis-ci.org/cultuurnet/silex-uitid-provider.svg?branch=master)](https://travis-ci.org/cultuurnet/silex-uitid-provider)
