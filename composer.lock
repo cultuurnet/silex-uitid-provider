@@ -917,12 +917,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Mbstring\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -991,12 +991,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php54\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php54\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -1068,12 +1068,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php55\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php55\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1142,12 +1142,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php56\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php56\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -1216,12 +1216,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Php70\\": ""
-                },
                 "files": [
                     "bootstrap.php"
                 ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php70\\": ""
+                },
                 "classmap": [
                     "Resources/stubs"
                 ]
@@ -2782,16 +2782,16 @@
         },
         {
             "name": "squizlabs/php_codesniffer",
-            "version": "2.7.0",
+            "version": "2.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
-                "reference": "571e27b6348e5b3a637b2abc82ac0d01e6d7bbed"
+                "reference": "d7cf0d894e8aa4c73712ee4a331cc1eaa37cdc7d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/571e27b6348e5b3a637b2abc82ac0d01e6d7bbed",
-                "reference": "571e27b6348e5b3a637b2abc82ac0d01e6d7bbed",
+                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/d7cf0d894e8aa4c73712ee4a331cc1eaa37cdc7d",
+                "reference": "d7cf0d894e8aa4c73712ee4a331cc1eaa37cdc7d",
                 "shasum": ""
             },
             "require": {
@@ -2856,7 +2856,7 @@
                 "phpcs",
                 "standards"
             ],
-            "time": "2016-09-01T23:53:02+00:00"
+            "time": "2017-03-01T22:17:45+00:00"
         },
         {
             "name": "symfony/config",
@@ -3063,12 +3063,12 @@
             "version": "1.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/webmozart/assert.git",
+                "url": "https://github.com/webmozarts/assert.git",
                 "reference": "bb2d123231c095735130cc8f6d31385a44c7b308"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webmozart/assert/zipball/bb2d123231c095735130cc8f6d31385a44c7b308",
+                "url": "https://api.github.com/repos/webmozarts/assert/zipball/bb2d123231c095735130cc8f6d31385a44c7b308",
                 "reference": "bb2d123231c095735130cc8f6d31385a44c7b308",
                 "shasum": ""
             },
